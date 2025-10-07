@@ -1,0 +1,20 @@
+.card {
+    box-shadow: 0px 10px 20px 10px theme(colors, muted);
+    background: white;
+    border-radius: theme(border-radius, default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding: 1.75rem;
+    font-size: small;
+    width: 100%;
+
+    @media screen and (min-width: 40rem) {
+      max-width: 35rem;
+      &.profile-container {
+        max-width: 50rem;
+      }
+    }
+  }

@@ -1,0 +1,61 @@
+@use "../base" as *;
+
+@mixin cellDesign() {
+  text-align: center;
+  white-space: nowrap;
+  background-color: white;
+  padding: 1rem;
+}
+
+.table {
+  &__default {
+    min-width: 600px;
+    // padding: 0.7rem 0.75rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: theme(border-radius, default);
+    font-size: small;
+    // overflow: hidden;
+
+    @media screen and (min-width: 768px) {
+      width: 100%;
+    }
+    
+    th {
+      @include cellDesign();
+      &.url-head {
+        text-align: left;
+      }
+    }
+    td {
+      @include cellDesign();
+      &.url-cell {
+        white-space: normal; // allow wrapping
+        word-break: break-all; // break inside long words/urls
+        max-width: 60%;
+        text-align: left;
+      }
+      i {
+        transform: scale(1.5);
+        cursor: pointer;
+      }
+    }
+    // rounded borders
+    // top-left
+    th:first-child {
+      border-top-left-radius: 0.75rem;
+    }
+    // top-right
+    th:last-child {
+      border-top-right-radius: 0.75rem;
+    }
+    // bottom-left
+    tr:last-child td:first-child {
+      border-bottom-left-radius: 0.75rem;
+    }
+    // bottom-right
+    tr:last-child td:last-child {
+      border-bottom-right-radius: 0.75rem;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+@use "../base" as *;
+
+button {
+  padding: 0.5rem 1rem;
+  border-radius: theme(border-radius, default);
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: white;
+  &.button {
+    &__default {
+      background-color: theme(colors, primary);
+      border: 1.5px solid theme(colors, primary);
+    }
+    &__secondary {
+      background-color: theme(colors, secondary);
+      color: theme(colors, primary);
+      border: 1.5px solid theme(colors, primary);
+    }
+    &__delete {
+      background-color: theme(colors, error);
+      border: 1.5px solid theme(colors, error);
+      width: auto;
+      font-size: smaller;
+    }
+  }
+  &.hidden{
+    display: none;
+  }
+}

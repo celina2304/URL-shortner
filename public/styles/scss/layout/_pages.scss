@@ -1,0 +1,9 @@
+@use '../base' as *;
+@use '../layout/container' as *;
+
+@include containerClass(login);
+@include containerClass(signup);
+
+@include containerClass(generate);
+@include containerClass(home);
+@include containerClass(profile);

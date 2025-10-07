@@ -1,0 +1,55 @@
+# =========================
+# Node / Express / EJS Project .gitignore
+# =========================
+
+# --- Node dependencies ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Environment files ---
+.env
+.env.*.local
+.env.local
+
+# --- Build / Dist files ---
+dist/
+build/
+public/css/
+public/js/
+.temp/
+.cache/
+.next/
+out/
+coverage/
+
+# --- Sass / CSS cache ---
+*.css.map
+.sass-cache/
+
+# --- Logs ---
+logs
+*.log
+log.*
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+
+# --- IDE / Editor junk ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Optional: backups / misc ---
+*.bak
+*.tmp
+*.old
+*.orig
+
+# --- Local data ---
+data/
+uploads/
+tmp/

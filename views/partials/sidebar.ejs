@@ -1,0 +1,25 @@
+<div class="sidebar">
+  <div class="sidebar__head">
+    <!-- <a class="sidebar__head-icon" href="/"><i class="bx bx-home"></i></a> -->
+    <span> URL Shortner </span>
+    <i id="sidebar-collapse" class='bx bx-x sidebar__head-icon'></i>
+  </div>
+  <div class="sidebar__body">
+    <a
+      class="sidebar__body-child <%= currentPath === '/' ? 'sidebar__body-child--selected' : '' %>"
+      href="/"
+      >All URLs</a
+    >
+    <a
+      class="sidebar__body-child <%= currentPath === '/generate' ? 'sidebar__body-child--selected' : '' %>"
+      href="/generate"
+      >Generate Url</a
+    >
+    <a
+      class="sidebar__body-child <%= currentPath === '/profile' ? 'sidebar__body-child--selected' : '' %>"
+      href="/profile"
+      >Profile</a
+    >
+  </div>
+</div>
+

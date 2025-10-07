@@ -1,0 +1,7 @@
+@use 'sass:map';
+@use 'variables' as *;
+
+// Helper function to get theme colors
+@function theme($category, $key) {
+  @return map.get(map.get($theme, $category), $key);
+}

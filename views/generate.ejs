@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/styles/css/style.css" />
+    <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico" />
+    <!-- Font Awesome CDN -->
+    <!-- Boxicons CDN -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <title>Generate New Short Url</title>
+  </head>
+
+  <body>
+    <%- include('partials/sidebar') %> <%- include('partials/header') %>
+
+    <div class="main-content">
+      <div class="dashboard-container">
+        <form method="POST" action="/url" class="form__default">
+          <div class="generate__container">
+            <div class="generate__container-head">
+              <h1>URL Shortner</h1>
+            </div>
+            <div class="generate__container-body form__default-body">
+              <div class="form__default-element">
+                <label for="url" class="form__default-label"
+                  >Enter your original URL</label
+                >
+                <input
+                  type="text"
+                  name="url"
+                  id="url"
+                  placeholder="https://example.com"
+                  class="form__default-input"
+                  required
+                  aria-required="true"
+                />
+              </div>
+            </div>
+            <div class="generate__container-footer">
+              <button class="button__default">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <%- include('partials/toast') %>
+  </body>
+</html>

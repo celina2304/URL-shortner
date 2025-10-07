@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/styles/css/style.css" />
+    <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico" />
+    <title>Signup</title>
+  </head>
+
+  <body>
+    <div class="login-signup-page">
+      <div class="signup__container">
+        <div class="signup__container-head">
+          <h1>Signup</h1>
+          <p>Please enter your details to sign up</p>
+        </div>
+
+        <form
+          method="POST"
+          action="/user/signup"
+          class="signup__container-body form__default"
+        >
+          <div class="form__default-body">
+            <div class="form__default-element has-children">
+              <div class="form__default-element">
+                <label for="firstname" class="form__default-label"
+                  >FirstName</label
+                >
+                <input
+                  type="text"
+                  name="firstname"
+                  id="firstname"
+                  placeholder="John"
+                  class="form__default-input"
+                  required
+                  aria-required="true"
+                />
+              </div>
+              <div class="form__default-element">
+                <label for="lastname" class="form__default-label"
+                  >LastName</label
+                >
+                <input
+                  type="text"
+                  name="lastname"
+                  id="lastname"
+                  placeholder="Doe"
+                  class="form__default-input"
+                  required
+                  aria-required="true"
+                />
+              </div>
+            </div>
+            <div class="form__default-element">
+              <label for="email" class="form__default-label">Email</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="john.doe@mail.xyz"
+                class="form__default-input"
+                required
+                aria-required="true"
+              />
+            </div>
+            <div class="form__default-element">
+              <label for="password" class="form__default-label">Password</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Enter your password"
+                class="form__default-input"
+                required
+                aria-required="true"
+              />
+            </div>
+            <div class="form__default-element login-signup-form-button">
+              <button class="button__default">Submit</button>
+            </div>
+          </div>
+        </form>
+        <div class="signup__container-footer">
+          <p>Already have an account? <a href="/login">Login</a></p>
+        </div>
+      </div>
+    </div>
+    <%- include('partials/toast') %>
+  </body>
+</html>

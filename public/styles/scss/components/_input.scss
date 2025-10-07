@@ -1,0 +1,17 @@
+@use "../base" as *;
+
+@mixin inputDefault {
+  width: 100%;
+  padding: 0.625rem;
+  background: theme(colors, white);
+  outline: none;
+  color: theme(colors, primary);
+  border: 0.05rem solid theme(colors, muted-border-color);
+  border-radius: theme(border-radius, xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  ::placeholder {
+    color: theme(colors, primary-muted);
+  }
+}

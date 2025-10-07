@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/styles/css/style.css" />
+    <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico" />
+    <!-- Font Awesome CDN -->
+    <!-- Boxicons CDN -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <title>Home page</title>
+  </head>
+
+  <body>
+    <%- include('partials/sidebar') %> <%- include('partials/header') %>
+
+    <div class="main-content">
+      <div class="dashboard-container">
+        <form style="width: 100%;" id="deleteForm" method="post" action="/url/delete-many">
+          <div class="home__container">
+            <% if (locals.urls) { %>
+            <div class="home__container-head">
+              <h1>Generated URLS:</h1>
+            </div>
+            <div class="home__container-body">
+              <table class="table__default">
+                <thead>
+                  <th>S.no.</th>
+                  <th>Short ID</th>
+                  <th class="url-head">Redirect URL</th>
+                  <th>Link</th>
+                  <th>Clicks</th>
+                  <th>Edit</th>
+                  <th>Select</th>
+                </thead>
+                <tbody>
+                  <% urls.forEach((url,index)=> { %>
+                  <tr>
+                    <td><%= index+1 %></td>
+                    <td><%= url.shortId %></td>
+                    <td class="url-cell"><%= url.redirectUrl %></td>
+                    <td>
+                      <a href="/url/<%= url.shortId %>" target="_blank"
+                        ><i class="bx bx-link"></i>
+                      </a>
+                    </td>
+                    <td><%= url.visitHistory.length %></td>
+                    <td><i class="bx bx-edit"></td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        name="deleteIds"
+                        value="<%= url.shortId %>"
+                      />
+                    </td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+            <div class="home__container-footer">
+              <button
+                style="display: none"
+                type="submit"
+                id="deleteBtn"
+                class="button__delete"
+              >
+                Delete Selected
+              </button>
+            </div>
+            <% } %>
+          </div>
+        </form>
+      </div>
+    </div>
+    <%- include('partials/toast') %>
+    <script>
+      // to find if any delete checkboxes are selected -> makes delete button visible
+      const deleteBtn = document.getElementById("deleteBtn");
+      const checkboxes = document.querySelectorAll("input[name='deleteIds']");
+
+      checkboxes.forEach((box) => {
+        box.addEventListener("change", () => {
+          const anyChecked = Array.from(checkboxes).some(
+            (checkbox) => checkbox.checked
+          );
+          deleteBtn.style.display = anyChecked ? "inline-block" : "none";
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+<div id="updateUrl" class="update-url <%= toast[0].type %>">
+  <p><%= toast && toast[0].message ? toast[0].message : '' %></p>
+  <p><%= toast && toast[0].shortId ? `Short ID: ${toast[0].shortId}` : '' %></p>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const toast = document.getElementById("toast");
+    if (toast && toast.textContent.trim() !== "") {
+      toast.classList.add("toast--show");
+      setTimeout(() => {
+        toast.classList.remove("toast--show");
+      }, 23000); // hide after 3 seconds
+    }
+  });
+</script>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/styles/css/style.css" />
+    <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico" />
+    <!-- Font Awesome CDN -->
+    <!-- Boxicons CDN -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <title>Profile page</title>
+  </head>
+
+  <body>
+    <%- include('partials/sidebar') %> <%- include('partials/header') %>
+
+    <div class="main-content">
+      <div class="dashboard-container">
+        <div class="profile__container">
+          <div class="profile__container-head">
+            <h1>Account details:</h1>
+          </div>
+          <div class="profile__container-body">
+            <div class="profile__container-body-section section-left">
+              <img
+                src="<%= user.avatar %>"
+                alt="Profile Image"
+                class="profile__avatar-image"
+              />
+              <button
+                type="button"
+                id="editProfileButton"
+                class="button__secondary"
+              >
+                Edit
+              </button>
+              <form
+                action="/profile/upload-avatar"
+                method="post"
+                id="avatar-form"
+                enctype="multipart/form-data"
+              >
+                <input
+                  style="width: 100%"
+                  class=""
+                  type="file"
+                  name="avatar"
+                  id="avatar"
+                />
+                <button type="submit">Upload</button>
+              </form>
+            </div>
+            <form
+              id="updateProfileForm"
+              class="form__default view-mode profile__container-body-section section-right"
+            >
+              <div class="form__default-body">
+                <div class="form__default-element">
+                  <div class="form__default-element child-element">
+                    <label
+                      class="form__default-label"
+                      for="user__profile-firstname"
+                      >FirstName:
+                    </label>
+                    <p class="view"><%= user.firstname %></p>
+                    <input
+                      id="user__profile-firstname"
+                      type="text"
+                      name="firstname"
+                      value="<%= user.firstname %>"
+                      class="edit hidden form__default-input"
+                    />
+                  </div>
+                  <div class="form__default-element child-element">
+                    <label
+                      class="form__default-label"
+                      for="user__profile-lastname"
+                      >LastName:
+                    </label>
+                    <p class="view"><%= user.lastname %></p>
+                    <input
+                      id="user__profile-lastname"
+                      type="text"
+                      name="lastname"
+                      value="<%= user.lastname %>"
+                      class="edit hidden form__default-input"
+                    />
+                  </div>
+                </div>
+
+                <div class="form__default-element">
+                  <label class="form__default-label" for="user__profile-email"
+                    >Email</label
+                  >
+                  <p class="view"><%= user.email %></p>
+                  <input
+                    id="user__profile-email"
+                    type="email"
+                    name="email"
+                    value="<%= user.email %>"
+                    class="edit hidden form__default-input"
+                  />
+                </div>
+
+                <div class="form__default-element">
+                  <label class="form__default-label" for="user__profile-address"
+                    >Address</label
+                  >
+                  <p class="view"><%= user.address %></p>
+                  <input
+                    id="user__profile-address"
+                    type="text"
+                    name="address"
+                    value="<%= user.address %>"
+                    class="edit hidden form__default-input"
+                  />
+                </div>
+                <!-- Buttons -->
+                <div class="profile__details-actions">
+                  <button
+                    type="submit"
+                    id="saveChangesButton"
+                    class="button__default hidden"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    id="discardChangesButton"
+                    class="button__secondary hidden"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="profile__container-footer">footer</div>
+        </div>
+      </div>
+    </div>
+    <%- include('partials/toast') %>
+    <script>
+      const form = document.getElementById("updateProfileForm");
+      const editBtn = document.getElementById("editProfileButton");
+      const saveBtn = document.getElementById("saveChangesButton");
+      const cancelBtn = document.getElementById("discardChangesButton");
+
+      editBtn.addEventListener("click", () => {
+        form.classList.remove("view-mode");
+        document
+          .querySelectorAll(".view")
+          .forEach((el) => el.classList.add("hidden"));
+        document
+          .querySelectorAll(".edit")
+          .forEach((el) => el.classList.remove("hidden"));
+        editBtn.classList.add("hidden");
+        saveBtn.classList.remove("hidden");
+        cancelBtn.classList.remove("hidden");
+      });
+
+      cancelBtn.addEventListener("click", () => {
+        window.location.reload(); // simplest way to reset
+      });
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        form.classList.add("loading");
+
+        const formData = Object.fromEntries(new FormData(form).entries());
+
+        try {
+          const res = await fetch("/api/user/update", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+
+          if (res.ok) {
+            window.location.reload();
+          } else {
+            alert("Error updating profile");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("Network error");
+        } finally {
+          form.classList.remove("loading");
+        }
+      });
+    </script>
+  </body>
+</html>

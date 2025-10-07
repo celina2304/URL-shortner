@@ -1,0 +1,21 @@
+@use "sass:map";
+@use "variables" as *;
+@use "functions" as *;
+
+@mixin baseFlex(
+  $direction: row,
+  $align: center,
+  $justify: center,
+  $flexGap: 0.625rem
+) {
+  // width: 100%;
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
+  flex-direction: $direction;
+  gap: $flexGap;
+}
+
+@mixin transition($time: 0.3s) {
+  transition: all $time ease-in-out;
+}

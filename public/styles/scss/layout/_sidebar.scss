@@ -1,0 +1,76 @@
+@use "../base" as *;
+
+.sidebar {
+  width: 0;
+  visibility: hidden;
+  overflow: hidden;
+  height: 100%;
+  background-color: theme(colors, primary);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease, visibility 0.3s ease;
+  z-index: 200;
+
+  // Sidebar open on mobile
+  &.open {
+    width: theme(sidebar-width, default);
+    visibility: visible;
+    overflow: visible;
+  }
+
+  // Hide sidebar on desktop if not open
+  @media screen and (min-width: 768px) {
+    width: theme(sidebar-width, default);
+    visibility: visible;
+    overflow: visible;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 200;
+  }
+
+  // --- Header ---
+  &__head {
+    font-size: larger;
+    height: theme(header-height, default);
+    @include baseFlex(row, center, center);
+    padding: 0.75rem;
+    border-bottom: 1px solid white;
+    cursor: default;
+    &-icon{
+      cursor: pointer;
+    }
+
+    @media screen and (min-width: 768px) {
+      &-icon {
+        display: none !important;
+      }
+    }
+  }
+
+  // --- Body ---
+  &__body {
+    @include baseFlex(column, flex-start, flex-start);
+    padding: 0.75rem;
+    width: 100%;
+
+    &-child {
+      width: 100%;
+      color: white;
+      font-size: small;
+      text-decoration: none;
+      padding: 0.5rem;
+      border-radius: theme(border-radius, default);
+      transition: background-color 0.2s ease;
+
+      &:hover,
+      &--selected {
+        background-color: theme(colors, secondary-muted);
+      }
+    }
+  }
+}

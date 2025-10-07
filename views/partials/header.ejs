@@ -1,0 +1,24 @@
+<nav class="header">
+  <span class="header__child">
+    <i id="sidebar-hamburger" class="bx bx-menu header__icon"></i>
+  </span>
+  <span class="header__child">
+    <a class="header__button" href="/user/logout">Logout</a>
+  </span>
+</nav>
+
+<script>
+  const sidebar = document.querySelector(".sidebar");
+  const hamburger = document.getElementById("sidebar-hamburger");
+  const closeBtn = document.getElementById("sidebar-collapse");
+
+  // Hamburger opens sidebar (mobile)
+  hamburger.addEventListener("click", () => {
+    sidebar.classList.add("open");
+  });
+
+  // X closes sidebar (mobile)
+  closeBtn.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+  });
+</script>

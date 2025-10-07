@@ -1,0 +1,152 @@
+@use "../base" as *;
+
+.main-content {
+  position: absolute;
+  top: theme(header-height, default);
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  background-color: theme(colors, secondary);
+  min-height: calc(100vh - theme(header-height, default));
+  transition: all 0.3s ease;
+
+  .dashboard-container {
+    padding: 1rem;
+    width: 100%;
+  }
+
+  // When sidebar is open on mobile
+  &.sidebar-open {
+    filter: brightness(0.6);
+    pointer-events: none; // prevent interaction with background
+  }
+
+  // --- Desktop / Tablet (>=768px) ---
+  @media screen and (min-width: 768px) {
+    left: theme(sidebar-width, default);
+    width: calc(100% - theme(sidebar-width, default));
+    filter: none;
+    pointer-events: auto;
+  }
+}
+
+.login-signup-page {
+  min-height: 100vh;
+  @include baseFlex(row, center, center);
+  padding: 2rem;
+  background: url("/assets/login-signup-bg.jpeg") no-repeat center center/cover;
+}
+
+@mixin containerClass($prefix: "") {
+  .#{$prefix} {
+    &__container {
+      @include baseFlex(column, flex-start, flex-start);
+      gap: 1rem;
+      width: 100%;
+
+      // special case: login/signup containers
+      @if ($prefix == "login" or $prefix == "signup") {
+        border-radius: theme(border-radius, default);
+        max-width: 400px;
+        padding: 2rem;
+        background-color: theme(colors, secondary);
+
+        &-head,
+        &-footer {
+          @include baseFlex(column, center, space-between);
+        }
+      } @else {
+        &-head {
+          @include baseFlex(row, center, space-between);
+        }
+        &-body {
+          @include baseFlex(column, center, start);
+        }
+        &-footer {
+          @include baseFlex(row, center, end);
+        }
+      }
+
+      @if ($prefix == "generate") {
+        width: 50%;
+        &-footer {
+          @include baseFlex(row, center, start);
+        }
+      }
+
+      &-head {
+        width: 100%;
+      }
+
+      &-body {
+        max-width: 100%;
+        overflow-x: auto; 
+        // display: block;
+        @include baseFlex(column, start, center);
+        @if ($prefix == "profile") {
+          & .profile-section {
+            @include baseFlex(column, start, start);
+            max-height: max-content;
+
+            width: auto;
+            // padding: 2rem;
+
+            & .profile__avatar {
+              position: relative;
+              @include baseFlex(row, start, center);
+
+              &-temporary {
+                @include baseFlex(row, center, center);
+                padding-left: 1.875rem;
+                gap: 1.875rem;
+                & .arrow {
+                  scale: 5;
+                  color: theme(colors, primary);
+                }
+              }
+
+              &-image,
+              &-updated-to-image {
+                width: 10rem;
+                height: 10rem;
+                object-fit: cover;
+                border-radius: theme(border-radius, pfp);
+                border: 0.125rem solid theme(colors, primary);
+              }
+              &-editButton {
+                position: absolute;
+                bottom: 0.5rem;
+                right: -0.5rem;
+              }
+              .pfp-hidden {
+                display: none;
+              }
+              &-form {
+                @include baseFlex(row, center, center);
+                & input.avatar-picture-input {
+                  display: none;
+                }
+                &.pfp-hidden {
+                  display: none;
+                }
+              }
+            }
+            & .profile__details {
+              &-actions {
+                width: 100%;
+                @include baseFlex(row, center, end);
+              }
+              & .hidden {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+
+      &-footer {
+        width: 100%;
+      }
+    }
+  }
+}

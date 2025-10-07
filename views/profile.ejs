@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/styles/css/style.css" />
+    <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico" />
+    <!-- Font Awesome CDN -->
+    <!-- Boxicons CDN -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <title>Profile page</title>
+  </head>
+
+  <body>
+    <%- include('partials/sidebar') %> <%- include('partials/header') %>
+
+    <div class="main-content">
+      <div class="dashboard-container">
+        <div class="profile__container">
+          <div class="profile__container-head">
+            <h1>Account details:</h1>
+          </div>
+          <div class="profile__container-body">
+            <div class="profile-section profile__avatar">
+              <div class="profile__avatar">
+                <img
+                  src="<%= user.avatar %>"
+                  alt="Profile Image"
+                  class="profile__avatar-image"
+                />
+                <div
+                  id="profilePictureAfterUpdate"
+                  class="profile__avatar-temporary pfp-hidden"
+                >
+                  <i class="arrow bx bx-right-arrow-alt"></i>
+                  <img
+                    src="<%= user.avatar %>"
+                    alt="Profile Image Updated to"
+                    id="profilePicturePreview"
+                    class="profile__avatar-updated-to-image"
+                  />
+                </div>
+                <button
+                  type="button"
+                  id="editProfileAvatarBtn"
+                  class="profile__avatar-editButton button__secondary"
+                >
+                  Edit
+                </button>
+              </div>
+              <form
+                action="/profile/upload-avatar"
+                method="post"
+                id="updateProfilePictureForm"
+                enctype="multipart/form-data"
+                class="profile__avatar-form pfp-hidden"
+              >
+                <input
+                  style="width: 100%"
+                  class="avatar-picture-input"
+                  type="file"
+                  name="avatar"
+                  id="uploadProfileAvatarInput"
+                />
+                <button
+                  id="uploadProfileAvatarBtn"
+                  type="button"
+                  class="button__secondary"
+                >
+                  Upload
+                </button>
+                <button
+                  id="uploadProfileAvatarSave"
+                  type="submit"
+                  class="button__default hidden"
+                >
+                  Save
+                </button>
+                <button
+                  id="cancelUploadProfileAvatarBtn"
+                  type="button"
+                  class="button__delete"
+                >
+                  Cancel
+                </button>
+              </form>
+            </div>
+
+            <div class="profile-section">
+              <form
+                id="updateProfileForm"
+                method="post"
+                action="/profile/update"
+                class="form__default view-mode"
+              >
+                <div class="form__default-element has-children">
+                  <div class="form__default-element">
+                    <label
+                      class="form__default-label"
+                      for="user__profile-firstname"
+                      >FirstName:
+                    </label>
+                    <!-- <p class="view"><%= user.firstname %></p> -->
+                    <input
+                      id="user__profile-firstname"
+                      type="text"
+                      name="firstname"
+                      value="<%= user.firstname %>"
+                      class="user_profile-input hidden form__default-input"
+                    />
+                  </div>
+                  <div class="form__default-element">
+                    <label
+                      class="form__default-label"
+                      for="user__profile-lastname"
+                      >LastName:
+                    </label>
+                    <!-- <p class="view"><%= user.lastname %></p> -->
+                    <input
+                      id="user__profile-lastname"
+                      type="text"
+                      name="lastname"
+                      value="<%= user.lastname %>"
+                      class="user_profile-input hidden form__default-input"
+                    />
+                  </div>
+                </div>
+
+                <div class="form__default-element">
+                  <label class="form__default-label" for="user__profile-email"
+                    >Email</label
+                  >
+                  <!-- <p class="view"><%= user.email %></p> -->
+                  <input
+                    id="user__profile-email"
+                    type="email"
+                    name="email"
+                    value="<%= user.email %>"
+                    class="user_profile-input hidden form__default-input"
+                  />
+                </div>
+
+                <!-- Buttons -->
+                <div class="profile__details-actions">
+                  <button
+                    type="submit"
+                    id="saveChangesButton"
+                    class="button__default hidden"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    id="discardChangesButton"
+                    class="button__secondary hidden"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include('partials/toast') %>
+    <script>
+      // update profile picture logic
+      const pfpForm = document.getElementById("updateProfilePictureForm");
+      const editProfileAvatarBtn = document.getElementById(
+        "editProfileAvatarBtn"
+      );
+      const uploadProfileAvatarBtn = document.getElementById(
+        "uploadProfileAvatarBtn"
+      );
+      const cancelUploadProfileAvatarBtn = document.getElementById(
+        "cancelUploadProfileAvatarBtn"
+      );
+      const uploadProfileAvatarInput = document.getElementById(
+        "uploadProfileAvatarInput"
+      );
+      const profilePicturePreview = document.getElementById(
+        "profilePicturePreview"
+      );
+      const uploadProfileAvatarSave = document.getElementById(
+        "uploadProfileAvatarSave"
+      );
+
+      // hides edit button, unhides upload and save button
+      editProfileAvatarBtn.addEventListener("click", () => {
+        editProfileAvatarBtn.classList.add("hidden");
+        pfpForm.classList.remove("pfp-hidden");
+      });
+
+      cancelUploadProfileAvatarBtn.addEventListener("click", () => {
+        window.location.reload(); // reset changes
+      });
+
+      uploadProfileAvatarBtn.addEventListener("click", () => {
+        uploadProfileAvatarInput.click();
+      });
+
+      uploadProfileAvatarInput.addEventListener("change", () => {
+        if (
+          uploadProfileAvatarInput.files &&
+          uploadProfileAvatarInput.files.length > 0
+        ) {
+          const file = uploadProfileAvatarInput.files[0];
+          // profilePicturePreview.src
+          const objectUrl = URL.createObjectURL(file);
+          profilePicturePreview.src = objectUrl;
+
+          // optional: revoke the URL later to free memory
+          profilePicturePreview.onload = () => URL.revokeObjectURL(objectUrl);
+
+          uploadProfileAvatarBtn.classList.add("hidden");
+          uploadProfileAvatarSave.classList.remove("hidden");
+          profilePictureAfterUpdate.classList.remove("pfp-hidden");
+        }
+      });
+
+      // update details logic
+      const detailsForm = document.getElementById("updateProfileForm");
+      const saveBtn = document.getElementById("saveChangesButton");
+      const cancelBtn = document.getElementById("discardChangesButton");
+      const inputs = detailsForm.querySelectorAll(".user_profile-input");
+
+      inputs.forEach((input) => {
+        input.addEventListener("change", () => {
+          saveBtn.classList.remove("hidden");
+          cancelBtn.classList.remove("hidden");
+        });
+      });
+
+      cancelBtn.addEventListener("click", () => {
+        window.location.reload(); // reset changes
+      });
+    </script>
+  </body>
+</html>

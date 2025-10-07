@@ -1,0 +1,44 @@
+@use "../base" as *;
+@use "./input" as input;
+
+.delete-form-body {
+  width: 100%;
+
+  .form-header {
+    @include baseFlex(row, center, space-between);
+    padding-bottom: 0.625rem;
+  }
+}
+
+.form {
+  &__default {
+    width: 100%;
+    &-body {
+      width: 100%;
+      @include baseFlex(column, center, center);
+      // margin-bottom: 1rem;
+    }
+    &-element {
+      width: 100%;
+      @include baseFlex(column, start, center);
+      gap: 0.25rem;
+      background-color: theme(colors, secondary);
+      border-radius: theme(border-radius, default);
+      padding-bottom: 0.3125rem;
+      &.has-children{
+        @include baseFlex(row, center, start);
+      }
+      &.login-signup-form-button{
+        @include baseFlex(column, center, center);
+      }
+    }
+    &-label {
+      // width: 100%;
+      font-weight: 600;
+      padding: 0.25rem 0 0.25rem 0;
+    }
+    &-input {
+      @include input.inputDefault();
+    }
+  }
+}

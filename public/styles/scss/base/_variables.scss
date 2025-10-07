@@ -1,0 +1,39 @@
+// _variables.scss
+
+$theme: (
+  colors: (
+    primary: #1e6685,
+    secondary: #eff8ff,
+    success: #2ecc71,
+    error: #e74c3c,
+    info: #3498db,
+    primary-muted: #123d4f,
+    secondary-muted: #a6b9c9,
+    muted: #f1f1f1,
+    // table-head: #ffffff,
+    // table-body: #edf3f8,
+    muted-border-color: #ddd,
+  ),
+  header-height: (
+    default: 3rem,
+  ),
+  sidebar-width: (
+    default: 10rem,
+    collapsed: 5rem,
+    md: 12.5rem,
+    lg: 15rem,
+    xl: 17.5rem,
+  ),
+  breakpoints: (
+    base: 0rem,
+    sm: 40rem, // 640px
+    md: 64rem, // 896px
+    lg: 90rem, // 1024px
+    xl: 120rem, // 1200px
+  ),
+  border-radius: (
+    default: 0.625rem,
+    xs: 0.25rem,
+    pfp: 100%
+  )
+);

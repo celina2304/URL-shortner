@@ -1,0 +1,68 @@
+@use "../base" as *;
+
+.toast {
+  position: fixed;
+  top: 1.5rem;
+  right: -400px; // start hidden outside screen
+  min-width: 280px;
+  padding: 1rem 1.25rem;
+  border-radius: theme(border-radius, default);
+  background-color: theme(colors, muted);
+  color: theme(colors, primary);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  opacity: 0;
+  transition: right 0.4s ease, opacity 0.4s ease;
+  z-index: 9999;
+  border-bottom: 3px solid theme(colors, primary);
+
+  &__content {
+    flex: 1;
+    text-align: left;
+
+    p {
+      margin: 0;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+  }
+
+  &__close, &__redirect {
+    font-size: 1.25rem;
+    scale: 1.2;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  // Toast appears (slides in)
+  &.toast--show {
+    right: 1.5rem;
+    opacity: 1;
+  }
+
+  // Toast hides (slides out)
+  &.toast--hide {
+    right: -400px;
+    opacity: 0;
+  }
+
+  // Color variations
+  &.success {
+    border-color: theme(colors, success);
+  }
+  &.error {
+    border-color: theme(colors, error);
+  }
+  &.info {
+    border-color: theme(colors, info);
+  }
+}
