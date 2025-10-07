@@ -32,9 +32,9 @@ async function handleUserSignup(req, res) {
 
     req.flash("toast", { type: "success", message: "Signup successful!" });
     return res.redirect("/login");
-
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error });
+    req.flash("toast", { type: "error", message: "Internal server error!" });
+    return res.redirect("/signup");
   }
 }
 
@@ -68,7 +68,8 @@ async function handleUserLogin(req, res) {
     req.flash("toast", { type: "success", message: "Login successful!" });
     return res.redirect("/");
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error });
+    req.flash("toast", { type: "error", message: "Internal server error!" });
+    return res.redirect("/login");
   }
 }
 
@@ -77,10 +78,14 @@ function handleLogout(req, res) {
     // res.clearCookie("uid");
     res.clearCookie("token");
 
-    req.flash("toast", { type: "success", message: "Logged out successfully!" });
+    req.flash("toast", {
+      type: "success",
+      message: "Logged out successfully!",
+    });
     return res.redirect("/login");
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error });
+    req.flash("toast", { type: "error", message: "Internal server error!" });
+    return res.redirect("/login");
   }
 }
 

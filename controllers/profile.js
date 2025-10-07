@@ -19,7 +19,8 @@ async function handleFileUpload(req, res) {
 
     res.redirect("/profile");
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    req.flash("toast", { type: "error", message: "Internal server error!" });
+    return res.redirect("/profile");
   }
 }
 
@@ -82,7 +83,8 @@ async function handleProfileUpdate(req, res) {
     });
     res.redirect("/profile");
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    req.flash("toast", { type: "error", message: "Internal server error!" });
+    return res.redirect("/profile");
   }
 }
 

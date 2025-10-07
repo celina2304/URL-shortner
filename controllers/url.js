@@ -16,11 +16,15 @@ async function handleGenerateNewShortURL(req, res) {
     });
 
     if (existing) {
-      req.flash("toast", { type: "info", message: "URL already exists!", shortId: existing.shortId });
+      req.flash("toast", {
+        type: "info",
+        message: "URL already exists!",
+        shortId: existing.shortId,
+      });
       return res.redirect(`/generate?shortId=${existing.shortId}`);
     }
     // generate new
-    const { nanoid } = await import('nanoid');
+    const { nanoid } = await import("nanoid");
     const shortId = nanoid(6);
     const shortUrl = new URL({
       shortId,
@@ -38,9 +42,8 @@ async function handleGenerateNewShortURL(req, res) {
     return res.redirect("/");
     // return res.redirect(`/?shortId=${shortId}`);
   } catch (err) {
-    return res
-      .status(500)
-      .json({ error: "Internal Server Error", message: err });
+    req.flash("toast", { type: "error", message: "Internal server error!" });
+    return res.redirect("/generate");
   }
 }
 
@@ -64,19 +67,20 @@ async function handleRedirectToNewShortURL(req, res) {
     );
     return res.redirect(shortUrl.redirectUrl);
   } catch (err) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    req.flash("toast", { type: "error", message: "Internal server error!" });
+    return res.redirect("/home");
   }
 }
 
 async function handleGetAnalytics(req, res) {
   try {
     const shortId = req.params.shortId;
-    if (!shortId){
+    if (!shortId) {
       req.flash("toast", {
-      type: "error",
-      message: "ShortID required!",
-    });
-    return res.redirect("/");
+        type: "error",
+        message: "ShortID required!",
+      });
+      return res.redirect("/");
     }
 
     const shortUrl = await URL.findOne({ shortId });
@@ -84,9 +88,9 @@ async function handleGetAnalytics(req, res) {
       totalClicks: shortUrl.visitHistory.length,
       visitHistory: shortUrl.visitHistory,
     });
-    
   } catch (error) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    req.flash("toast", { type: "error", message: "Internal server error!" });
+    return res.redirect("/home");
   }
 }
 
@@ -106,7 +110,8 @@ async function handleDeleteShortURL(req, res) {
     });
     return res.redirect("/");
   } catch (error) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    req.flash("toast", { type: "error", message: "Internal server error!" });
+    return res.redirect("/home");
   }
 }
 
@@ -117,7 +122,7 @@ async function handleDeleteManyShortURL(req, res) {
       req.flash("toast", { type: "error", message: "Short IDs required!" });
       return res.redirect("/");
     }
-    
+
     // make sure shortIds is an array
     const idsArray = Array.isArray(shortIds) ? shortIds : [shortIds];
 
@@ -125,12 +130,15 @@ async function handleDeleteManyShortURL(req, res) {
       shortId: { $in: idsArray },
       createdBy: req?.user._id,
     });
-    
-    req.flash("toast", { type: "success", message: "Deleted URLs successfully!" });
-    return res.redirect("/");
 
+    req.flash("toast", {
+      type: "success",
+      message: "Deleted URLs successfully!",
+    });
+    return res.redirect("/");
   } catch (error) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    req.flash("toast", { type: "error", message: "Internal server error!" });
+    return res.redirect("/home");
   }
 }
 
