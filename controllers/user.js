@@ -55,14 +55,8 @@ async function handleUserLogin(req, res) {
       req.flash("toast", { type: "error", message: "Invalid credentials!" });
       return res.redirect("/login");
     }
-
-    // session based auth
-    // const sessionId = uuidv4();
-    // setUser(sessionId, existingUser);
     const sessionId = setUser(existingUser); // returns token
-    console.log(sessionId);
 
-    // return res.json({ message: "Login successful", token: sessionId });
     res.cookie("token", sessionId, { httpOnly: true });
 
     req.flash("toast", { type: "success", message: "Login successful!" });
