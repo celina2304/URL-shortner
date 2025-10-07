@@ -41,7 +41,7 @@ async function handleUserSignup(req, res) {
 async function handleUserLogin(req, res) {
   try {
     const { email, password } = req.body;
-
+    
     if (!email | !password) {
       req.flash("toast", {
         type: "error",
@@ -59,8 +59,8 @@ async function handleUserLogin(req, res) {
     // session based auth
     // const sessionId = uuidv4();
     // setUser(sessionId, existingUser);
-
     const sessionId = setUser(existingUser); // returns token
+    console.log(sessionId);
 
     // return res.json({ message: "Login successful", token: sessionId });
     res.cookie("token", sessionId, { httpOnly: true });

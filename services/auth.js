@@ -1,19 +1,24 @@
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
+const { encrypt, decrypt } = require("../services/encrypt");
 function setUser(user) {
   try {
-    return jwt.sign(
+    const token = jwt.sign(
       {
         _id: user._id,
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
         avatar: user.avatar,
-        role: user.role
+        role: user.role,
       },
-      JWT_SECRET_KEY
+      JWT_SECRET_KEY,
+      { expiresIn: "1h" }
     );
+    const encryptedToken = encrypt(token);
+
+    return JSON.stringify(encryptedToken);
   } catch (error) {
     return null;
   }
@@ -22,7 +27,9 @@ function setUser(user) {
 function getUser(token) {
   try {
     if (!token) return null;
-    return jwt.verify(token, JWT_SECRET_KEY);
+    const encryptedToken = JSON.parse(token);
+    const decryptedToken = decrypt(encryptedToken);
+    return jwt.verify(decryptedToken, JWT_SECRET_KEY);
   } catch (error) {
     return null;
   }
