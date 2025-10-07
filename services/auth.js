@@ -1,7 +1,10 @@
 const jwt = require("jsonwebtoken");
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
-
 const { encrypt, decrypt } = require("../services/encrypt");
+const config = require("../config/config");
+
+const JWT_SECRET_KEY = config.jwt.secret;
+const JWT_EXPIRES_KEY = config.jwt.expires;
+
 function setUser(user) {
   try {
     const token = jwt.sign(
@@ -14,7 +17,7 @@ function setUser(user) {
         role: user.role,
       },
       JWT_SECRET_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: JWT_EXPIRES_KEY }
     );
     const encryptedToken = encrypt(token);
 

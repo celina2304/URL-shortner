@@ -1,13 +1,14 @@
 const express = require("express");
 const path = require("path");
-const dotenv = require("dotenv");
+// const dotenv = require("dotenv");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 
-dotenv.config();
+// dotenv.config();
 
 // mongo connection
 const connectMongo = require("./config/connect");
+const config = require("./config/config");
 
 // middleware
 const { checkForAuthentication, restrictTo } = require("./middlewares/auth"); 
@@ -21,10 +22,10 @@ const staticRoute = require("./routes/staticRouter");
 const { default: flashMiddleware } = require("./middlewares/flash");
 
 const app = express();
-const PORT = 8001;
+const PORT = config.port || 8001;
 
 // mongo connection
-connectMongo(process.env.MONGO_URI).then(() =>
+connectMongo(config.mongouri).then(() =>
   console.log("Mongodb Connected")
 );
 
@@ -42,7 +43,7 @@ app.use(logRequestPath); // to log path
 // for toast on redirect
 app.use(
   session({
-    secret: "your-secret",
+    secret: config.expressSessionScrt,
     resave: false,
     saveUninitialized: true,
   })

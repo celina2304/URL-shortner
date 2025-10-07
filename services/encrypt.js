@@ -1,8 +1,7 @@
-const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const config = require('../config/config');
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
-const ENC_KEY = crypto.randomBytes(32); // AES-256
+const ENC_KEY = config.encKey;
 const IV = crypto.randomBytes(16); // 16 bytes IV
 
 // Function to encrypt text
