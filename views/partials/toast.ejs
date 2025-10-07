@@ -1,34 +1,43 @@
-<% if (toast && toast.length > 0) { %>
-<div id="toast" class="toast <%= toast[0].type %>">
+<% if (toast && toast.length > 0) { %> <% toast.forEach((t, index) => { %>
+<div id="toast-<%= index %>" class="toast <%= t.type %>">
   <div class="toast__content">
-    <p><%= toast && toast[0].message ? toast[0].message : '' %></p>
-    <% if (toast && toast[0].shortId) { %>
-    <p>Short ID: <%= toast[0].shortId %></p>
+    <p><%= t.message %></p>
+    <% if (t.shortId) { %>
+    <p>Short ID: <%= t.shortId %></p>
     <% } %>
   </div>
   <span class="toast__close"><i class="bx bx-x"></i></span>
-  <span class="toast__redirect"
-    ><a href="/url/<%= toast[0].shortId %>" target="_blank"
-      ><i class="bx bx-link"></i> </a
-  ></span>
+  <% if (t.shortId) { %>
+  <span class="toast__redirect">
+    <a href="/url/<%= t.shortId %>" target="_blank"
+      ><i class="bx bx-link"></i
+    ></a>
+  </span>
+  <% } %>
 </div>
-<% } %>
+<% }) %> <% } %>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const toast = document.getElementById("toast");
-    const closeBtn = document.querySelector(".toast__close");
+    const toasts = document.querySelectorAll(".toast");
 
-    if (toast) {
-      // Show toast with slide-in
+    toasts.forEach((toast) => {
+      // Slide in from right
       requestAnimationFrame(() => toast.classList.add("toast--show"));
 
-      // Close on click
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove("toast--show");
+        toast.remove();
+      }, 5000);
+
+      // Close button
+      const closeBtn = toast.querySelector(".toast__close");
       closeBtn?.addEventListener("click", () => {
         toast.classList.remove("toast--show");
         toast.classList.add("toast--hide");
         setTimeout(() => toast.remove(), 400); // wait for animation
       });
-    }
+    });
   });
 </script>

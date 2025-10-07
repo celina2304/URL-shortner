@@ -2,7 +2,6 @@ const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
 const session = require("express-session");
-const flash = require("connect-flash");
 const cookieParser = require("cookie-parser");
 
 dotenv.config();
@@ -12,13 +11,14 @@ const connectMongo = require("./config/connect");
 
 // middleware
 const { checkForAuthentication, restrictTo } = require("./middlewares/auth"); 
-const { logRequestPath, sendToastOnRedirect } = require("./middlewares/utils"); 
+const { logRequestPath } = require("./middlewares/utils"); 
 
 // routers
 const urlRoute = require("./routes/url");
 const userRoute = require("./routes/user");
 const profileRoute = require("./routes/profile");
 const staticRoute = require("./routes/staticRouter");
+const { default: flashMiddleware } = require("./middlewares/flash");
 
 const app = express();
 const PORT = 8001;
@@ -38,14 +38,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(checkForAuthentication); // to set req.user
 app.use(logRequestPath); // to log path
+
 // for toast on redirect
-app.use(session({
-  secret: process.env.EXPRESS_SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true
-}));
-app.use(flash());
-app.use(sendToastOnRedirect); // to log path
+app.use(
+  session({
+    secret: "your-secret",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(flashMiddleware);
 
 // for static files
 app.use(express.static(path.join(__dirname, "public")));
