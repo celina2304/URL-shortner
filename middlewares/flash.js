@@ -1,4 +1,4 @@
-export default function flashMiddleware(req, res, next) {
+function flashMiddleware(req, res, next) {
   if (!req.session.flash) req.session.flash = [];
 
   req.flash = (type, messageObj) => {
@@ -10,3 +10,4 @@ export default function flashMiddleware(req, res, next) {
 
   next();
 }
+module.exports = flashMiddleware;

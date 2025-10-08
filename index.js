@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 // dotenv.config();
 
 // mongo connection
-const connectMongo = require("./config/connect");
+const {connectMongo, sessionMiddleware} = require("./config/connect");
 const config = require("./config/config");
 
 // middleware
@@ -19,15 +19,13 @@ const urlRoute = require("./routes/url");
 const userRoute = require("./routes/user");
 const profileRoute = require("./routes/profile");
 const staticRoute = require("./routes/staticRouter");
-const { default: flashMiddleware } = require("./middlewares/flash");
+const flashMiddleware = require("./middlewares/flash");
 
 const app = express();
 const PORT = config.port || 8001;
 
 // mongo connection
-connectMongo(config.mongouri).then(() =>
-  console.log("Mongodb Connected")
-);
+connectMongo();
 
 // set templating engine to ejs
 app.set("view engine", "ejs");
@@ -36,6 +34,7 @@ app.set("views", path.resolve("./views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(sessionMiddleware)
 app.use(cookieParser());
 app.use(checkForAuthentication); // to set req.user
 app.use(logRequestPath); // to log path

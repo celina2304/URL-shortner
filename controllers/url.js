@@ -1,12 +1,22 @@
 // const { nanoid } = require("nanoid");
 const URL = require("../models/url");
+const validator = require("validator");
+
+const isValidUrl = (url) => {
+  validator.isURL(url, {require_protocol: true});
+}
 
 async function handleGenerateNewShortURL(req, res) {
   try {
-    // console.log(req.user);
-    const body = req.body;
-    if (!body.url) {
+    
+    const originalUrl = req.body?.url || null;
+    if (!originalUrl) {
       req.flash("toast", { type: "error", message: "URL required!" });
+      return res.redirect("/");
+    }
+    
+    if(!isValidUrl(originalUrl)){
+      req.flash("toast", { type: "error", message: "Please enter a valid URL!" });
       return res.redirect("/");
     }
 
