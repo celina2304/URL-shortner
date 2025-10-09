@@ -22,7 +22,9 @@ WORKDIR /usr/src/app
 # into this layer.
 # RUN --mount=type=bind,source=package.json,target=package.json \
 #     --mount=type=bind,source=package-lock.json,target=package-lock.json \
-#     npm ci --omit=dev
+
+COPY package*.json ./
+RUN npm ci --omit=dev
 
 # Run the application as a non-root user.
 USER node
