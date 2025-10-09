@@ -3,6 +3,12 @@ const User = require("../models/user");
 async function handleFileUpload(req, res) {
   try {
     const userId = req.user._id;
+    const allowedFields = ['username', 'bio'];
+    const update = {};
+
+    allowedFields.forEach((key) => {
+      if (req.body[key]) update[key] = req.body[key];
+    });
 
     // req.file.path is the Cloudinary URL
     await User.findByIdAndUpdate(
@@ -10,7 +16,6 @@ async function handleFileUpload(req, res) {
       { avatar: req.file.path },
       { new: true }
     );
-    // console.log("Updated user:", updatedUser);
 
     req.flash("toast", {
       type: "success",
@@ -19,6 +24,7 @@ async function handleFileUpload(req, res) {
 
     res.redirect("/profile");
   } catch (err) {
+    logger.error(`File upload error: ${err.message}`);
     req.flash("toast", { type: "error", message: "Internal server error!" });
     return res.redirect("/profile");
   }
@@ -75,14 +81,13 @@ async function handleProfileUpdate(req, res) {
     await User.findByIdAndUpdate(userId, fieldsToUpdate, {
       new: true,
     });
-
-    // console.log("Updated user:", updatedUser);
     req.flash("toast", {
       type: "success",
       message: "Profile updated successfully.",
     });
     res.redirect("/profile");
   } catch (err) {
+    logger.error(`Error updating profile: ${err.message}`);
     req.flash("toast", { type: "error", message: "Internal server error!" });
     return res.redirect("/profile");
   }

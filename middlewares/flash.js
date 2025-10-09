@@ -10,4 +10,4 @@ function flashMiddleware(req, res, next) {
 
   next();
 }
-module.exports = flashMiddleware;
+module.exports = { flashMiddleware };

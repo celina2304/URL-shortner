@@ -1,28 +1,44 @@
 // const { nanoid } = require("nanoid");
 const URL = require("../models/url");
 const validator = require("validator");
+const xss = require("xss");
 
 const isValidUrl = (url) => {
-  validator.isURL(url, {require_protocol: true});
-}
+  const cleanedUrl = url?.trim();
+
+  return validator.isURL(cleanedUrl, {
+    require_protocol: true,
+    protocols: ["http", "https"],
+    allow_underscores: false,
+    require_host: true,
+  });
+};
 
 async function handleGenerateNewShortURL(req, res) {
   try {
-    
     const originalUrl = req.body?.url || null;
+    const currentUserId = req.user._id;
+
     if (!originalUrl) {
       req.flash("toast", { type: "error", message: "URL required!" });
-      return res.redirect("/");
-    }
-    
-    if(!isValidUrl(originalUrl)){
-      req.flash("toast", { type: "error", message: "Please enter a valid URL!" });
-      return res.redirect("/");
+      return res.redirect("/generate");
     }
 
+    if (!isValidUrl(originalUrl)) {
+      req.flash("toast", {
+        type: "error",
+        message: "Please enter a valid URL!",
+      });
+      return res.redirect("/generate");
+    }
+
+    // sanitize url to prevent xss
+    // const scriptTagSafeUrl = validator.escape(originalUrl);
+    const safeUrl = xss(originalUrl);
+
     const existing = await URL.findOne({
-      redirectUrl: body.url,
-      createdBy: req?.user._id,
+      redirectUrl: safeUrl,
+      createdBy: currentUserId,
     });
 
     if (existing) {
@@ -38,9 +54,9 @@ async function handleGenerateNewShortURL(req, res) {
     const shortId = nanoid(6);
     const shortUrl = new URL({
       shortId,
-      redirectUrl: body.url,
+      redirectUrl: safeUrl,
       visitHistory: [],
-      createdBy: req.user._id,
+      createdBy: currentUserId,
     });
     await shortUrl.save();
 
@@ -52,6 +68,7 @@ async function handleGenerateNewShortURL(req, res) {
     return res.redirect("/");
     // return res.redirect(`/?shortId=${shortId}`);
   } catch (err) {
+    logger.error(`Shorten URL error: ${err.message}`);
     req.flash("toast", { type: "error", message: "Internal server error!" });
     return res.redirect("/generate");
   }
@@ -77,6 +94,7 @@ async function handleRedirectToNewShortURL(req, res) {
     );
     return res.redirect(shortUrl.redirectUrl);
   } catch (err) {
+    logger.error(`Redirect URL error: ${err.message}`);
     req.flash("toast", { type: "error", message: "Internal server error!" });
     return res.redirect("/home");
   }
@@ -98,7 +116,8 @@ async function handleGetAnalytics(req, res) {
       totalClicks: shortUrl.visitHistory.length,
       visitHistory: shortUrl.visitHistory,
     });
-  } catch (error) {
+  } catch (err) {
+    logger.error(`Handle get analytics error: ${err.message}`);
     req.flash("toast", { type: "error", message: "Internal server error!" });
     return res.redirect("/home");
   }
@@ -107,19 +126,21 @@ async function handleGetAnalytics(req, res) {
 async function handleDeleteShortURL(req, res) {
   try {
     const shortId = req.params.shortId;
+    const currentUserId = req.user._id;
     if (!shortId) {
       req.flash("toast", { type: "error", message: "URL required!" });
       return res.redirect("/");
     }
 
-    await URL.findOneAndDelete({ shortId, createdBy: req?.user._id });
+    await URL.findOneAndDelete({ shortId, createdBy: currentUserId });
 
     req.flash("toast", {
       type: "success",
       message: "Deleted URL succesfully!",
     });
     return res.redirect("/");
-  } catch (error) {
+  } catch (err) {
+    logger.error(`Delete URL error: ${err.message}`);
     req.flash("toast", { type: "error", message: "Internal server error!" });
     return res.redirect("/home");
   }
@@ -128,6 +149,7 @@ async function handleDeleteShortURL(req, res) {
 async function handleDeleteManyShortURL(req, res) {
   try {
     const shortIds = req.body.deleteIds;
+    const currentUserId = req.user._id;
     if (!shortIds || shortIds.length === 0) {
       req.flash("toast", { type: "error", message: "Short IDs required!" });
       return res.redirect("/");
@@ -138,7 +160,7 @@ async function handleDeleteManyShortURL(req, res) {
 
     await URL.deleteMany({
       shortId: { $in: idsArray },
-      createdBy: req?.user._id,
+      createdBy: currentUserId,
     });
 
     req.flash("toast", {
@@ -146,7 +168,8 @@ async function handleDeleteManyShortURL(req, res) {
       message: "Deleted URLs successfully!",
     });
     return res.redirect("/");
-  } catch (error) {
+  } catch (err) {
+    logger.error(`Delete URLs error: ${err.message}`);
     req.flash("toast", { type: "error", message: "Internal server error!" });
     return res.redirect("/home");
   }

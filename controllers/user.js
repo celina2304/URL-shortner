@@ -1,6 +1,7 @@
 const User = require("../models/user");
 // const { v4: uuidv4 } = require("uuid");
 const { setUser } = require("../services/auth");
+const { logger } = require("../services/logger.js");
 
 async function handleUserSignup(req, res) {
   try {
@@ -32,7 +33,8 @@ async function handleUserSignup(req, res) {
 
     req.flash("toast", { type: "success", message: "Signup successful!" });
     return res.redirect("/login");
-  } catch (error) {
+  } catch (err) {
+    logger.error(`Signup error: ${err.message}`);
     req.flash("toast", { type: "error", message: "Internal server error!" });
     return res.redirect("/signup");
   }
@@ -41,7 +43,7 @@ async function handleUserSignup(req, res) {
 async function handleUserLogin(req, res) {
   try {
     const { email, password } = req.body;
-    
+
     if (!email | !password) {
       req.flash("toast", {
         type: "error",
@@ -50,18 +52,26 @@ async function handleUserLogin(req, res) {
       return res.redirect("/login");
     }
 
-    const existingUser = await User.findOne({ email });
+    // const all = await User.find({});
+    const existingUser = await User.findOne({ email }).select("+password");
     if (!existingUser) {
       req.flash("toast", { type: "error", message: "Invalid credentials!" });
       return res.redirect("/login");
     }
+
+    const isMatch = await existingUser.matchPassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
     const sessionId = setUser(existingUser); // returns token
 
     res.cookie("token", sessionId, { httpOnly: true });
 
     req.flash("toast", { type: "success", message: "Login successful!" });
     return res.redirect("/");
-  } catch (error) {
+  } catch (err) {
+    logger.error(`Login error: ${err.message}`);
     req.flash("toast", { type: "error", message: "Internal server error!" });
     return res.redirect("/login");
   }
@@ -71,13 +81,15 @@ function handleLogout(req, res) {
   try {
     // res.clearCookie("uid");
     res.clearCookie("token");
+    res.clearCookie("connect-sid");
 
     req.flash("toast", {
       type: "success",
       message: "Logged out successfully!",
     });
     return res.redirect("/login");
-  } catch (error) {
+  } catch (err) {
+    logger.error(`Logout error: ${err.message}`);
     req.flash("toast", { type: "error", message: "Internal server error!" });
     return res.redirect("/login");
   }
