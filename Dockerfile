@@ -22,7 +22,6 @@ WORKDIR /usr/src/app
 # into this layer.
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,id=s/12f7fd78-6fce-443f-8d6c-d4ff6db0c0df-/root/cache/npm,target=/root/.cache/npm \
     npm ci --omit=dev
 
 # Run the application as a non-root user.
