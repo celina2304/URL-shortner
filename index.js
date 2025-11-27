@@ -1,11 +1,6 @@
 const express = require("express");
 const path = require("path");
-// const dotenv = require("dotenv");
-const session = require("express-session");
 const cookieParser = require("cookie-parser");
-
-// dotenv.config();
-
 // mongo connection
 const { connectMongo, sessionMiddleware } = require("./config/connect");
 

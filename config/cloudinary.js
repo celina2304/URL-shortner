@@ -6,8 +6,10 @@ cloudinary.config({
   cloud_name: config.cloudinary.cloud_name,
   api_key: config.cloudinary.api_key,
   api_secret: config.cloudinary.api_secret,
+  secure: true // for HTTPS urls
 });
 
+// create a CloudinaryStorage instance for Multer
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
