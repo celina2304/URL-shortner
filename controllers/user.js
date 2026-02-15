@@ -61,7 +61,8 @@ async function handleUserLogin(req, res) {
 
     const isMatch = await existingUser.matchPassword(password);
     if (!isMatch) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      req.flash("toast", { type: "error", message: "Invalid credentials!" });
+      return res.redirect("/login");
     }
 
     const sessionId = setUser(existingUser); // returns token
@@ -87,6 +88,7 @@ function handleLogout(req, res) {
       type: "success",
       message: "Logged out successfully!",
     });
+    
     return res.redirect("/login");
   } catch (err) {
     logger.error(`Logout error: ${err.message}`);

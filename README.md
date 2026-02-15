@@ -154,9 +154,3 @@ All required environment variables are listed in the `.env.example` file.
 **Always use `.env.example` as a reference when setting up your `.env` file.**
 
 ---
-
-## License
-
-MIT
-
----
